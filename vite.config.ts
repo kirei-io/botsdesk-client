@@ -8,8 +8,22 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
+  server: {
+    proxy: {
+      '/auth': {
+        target: 'http://194.135.92.114/cu',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/auth/, '')
+      },
+      '/api': {
+        target: 'http://194.135.92.114/ag',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
     }
   }
 })
