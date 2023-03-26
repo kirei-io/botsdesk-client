@@ -1,0 +1,25 @@
+name: DEPLOY
+on:
+  push:
+    branches:
+    - deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 19
+    - run: npm install
+    - run: npm build
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@5.2.1
+      with:
+        switches: -avzr --delete
+        path: dist/
+        remote_path: /syncdata
+        remote_host: 194.135.92.114
+        remote_user: rsyncc
+        remote_key: ${{ secrets.DEPLOY_KEY }}
