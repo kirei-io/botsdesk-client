@@ -48,11 +48,6 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('./LoginPage.vue')
   },
   {
-    path: ROUTE_PATH[ROUTE_NAME.SIGNUP],
-    name: ROUTE_NAME.SIGNUP,
-    component: () => import('./SignupPage.vue')
-  },
-  {
     path: ROUTE_PATH[ROUTE_NAME.NOT_FOUND],
     name: ROUTE_NAME.NOT_FOUND,
     component: NotFound

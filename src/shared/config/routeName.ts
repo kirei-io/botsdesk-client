@@ -1,7 +1,7 @@
 export enum ROUTE_NAME {
   HOME = 'home',
   LOGIN = 'login',
-  SIGNUP = 'signup',
+  // SIGNUP = 'signup',
   NOT_FOUND = 'notfound',
   ARTICLE_LIST = 'article.list',
   ARTICLE_CREATE = 'article.create',

@@ -7,6 +7,6 @@ export const ROUTE_PATH = {
   [ROUTE_NAME.ARTICLE_VIEW]: '/business/:business_id(\\d+)/article/:id(\\d+)',
   [ROUTE_NAME.ARTICLE_EDIT]: '/business/:business_id(\\d+)/article/:id(\\d+)/edit',
   [ROUTE_NAME.LOGIN]: '/login/',
-  [ROUTE_NAME.SIGNUP]: '/signup',
+  // [ROUTE_NAME.SIGNUP]: '/signup',
   [ROUTE_NAME.NOT_FOUND]: '/:pathMatch(.*)*'
 } as const
