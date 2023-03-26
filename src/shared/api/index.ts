@@ -4,13 +4,16 @@ import axios, { type CreateAxiosDefaults } from 'axios'
 // import { CustomerApi } from './customer'
 
 const authConfig: CreateAxiosDefaults = {
-  baseURL: '/auth',
+  // baseURL: '/auth',
+  baseURL: 'https://botsdesk.com/ag',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   }
 }
+
 const defaultConfig: CreateAxiosDefaults = {
-  baseURL: '/api',
+  // baseURL: '/api',
+  baseURL: 'https://botsdesk.com/cu',
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${localStorage.getItem('access_token')}`
