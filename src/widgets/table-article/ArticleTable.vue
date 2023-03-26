@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { useRoute } from 'vue-router'
 
-import { useArticlesListStore } from '@/entities/customer';
-import { ROUTE_NAME } from '@/shared/config';
-import { RouteLinkInline, TableCell, TableHeader, TableLayout, TableRow } from '@/shared/ui';
+import { useArticlesListStore } from '@/entities/customer'
+import { ROUTE_NAME } from '@/shared/config'
+import { RouteLinkInline, TableCell, TableHeader, TableLayout, TableRow } from '@/shared/ui'
 
 const route = useRoute()
 const store = useArticlesListStore()
-
 </script>
 
 <template>
@@ -19,20 +18,20 @@ const store = useArticlesListStore()
       <TableHeader class="w-3/12">Updated at</TableHeader>
     </template>
     <template #body>
-      <TableRow
-        v-for="article of store.articlesList"
-        :key="article.article_id"
-      >
+      <TableRow v-for="article of store.articlesList" :key="article.article_id">
         <TableCell>
           {{ article.article_id }}
         </TableCell>
         <TableCell>
-          <RouteLinkInline :to="{
-            name: ROUTE_NAME.ARTICLE_VIEW, params: {
-              ...route.params,
-              id: article.article_id
-            }
-          }">
+          <RouteLinkInline
+            :to="{
+              name: ROUTE_NAME.ARTICLE_VIEW,
+              params: {
+                ...route.params,
+                id: article.article_id
+              }
+            }"
+          >
             {{ article.question_md }}
           </RouteLinkInline>
         </TableCell>
@@ -45,12 +44,7 @@ const store = useArticlesListStore()
       </TableRow>
     </template>
   </TableLayout>
-  <div
-    v-if="!store.totalArticles"
-    class="w-full text-center mt-10 font-semibold text-ctp-overlay1"
-  >
-    <span class=" bg-ctp-mantle p-2 rounded">
-      No items
-    </span>
+  <div v-if="!store.totalArticles" class="mt-10 w-full text-center font-semibold text-ctp-overlay1">
+    <span class="rounded bg-ctp-mantle p-2"> No items </span>
   </div>
 </template>

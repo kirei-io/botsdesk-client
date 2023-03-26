@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { computed, ref } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { computed, ref } from 'vue'
 
-import { range } from '@/shared/lib';
-import { ButtonFlat } from '@/shared/ui';
+import { range } from '@/shared/lib'
+import { ButtonFlat } from '@/shared/ui'
 interface TablePagination {
   total: number
 }
@@ -52,7 +52,6 @@ const updatePage = (page: number) => {
   currentPage.value = page
   emit('update', skip.value, limit.value)
 }
-
 </script>
 
 <template>
@@ -67,15 +66,12 @@ const updatePage = (page: number) => {
         @click="() => updatePage(currentPage - 1)"
         class="!px-2 !py-1"
       >
-        <FontAwesomeIcon
-          :icon="['fas', 'angle-left']"
-          class="text-sm"
-        />
+        <FontAwesomeIcon :icon="['fas', 'angle-left']" class="text-sm" />
       </ButtonFlat>
       <!-- arrow left -->
 
       <ButtonFlat
-        v-for="item, index of visiblePages"
+        v-for="(item, index) of visiblePages"
         :key="index"
         :disabled="item === -1 || isCurrentPage(item)"
         @click="() => updatePage(item)"
@@ -91,10 +87,7 @@ const updatePage = (page: number) => {
         @click="() => updatePage(currentPage + 1)"
         class="!px-2 !py-1"
       >
-        <FontAwesomeIcon
-          :icon="['fas', 'angle-right']"
-          class="text-sm"
-        />
+        <FontAwesomeIcon :icon="['fas', 'angle-right']" class="text-sm" />
       </ButtonFlat>
     </div>
   </div>

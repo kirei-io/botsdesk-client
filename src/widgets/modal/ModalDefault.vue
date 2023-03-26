@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CardLayout } from '@/shared/ui';
+import { CardLayout } from '@/shared/ui'
 
 interface ModalProps {
   isOpen: boolean
@@ -23,20 +23,11 @@ const close = () => emit('close')
       leave-to-class="opacity-0"
       mode="in-out"
     >
-      <div
-        v-show="props.isOpen"
-        class="absolute top-0 left-0 z-10 text-ctp-text"
-      >
-        <CardLayout
-          :class="modalClass"
-          class="absolute top-1/4 left-2/4 z-50 mx-auto"
-        >
+      <div v-show="props.isOpen" class="absolute top-0 left-0 z-10 text-ctp-text">
+        <CardLayout :class="modalClass" class="absolute top-1/4 left-2/4 z-50 mx-auto">
           <slot />
         </CardLayout>
-        <div
-          @click="close"
-          class="min-h-screen w-screen bg-ctp-overlay0 opacity-50"
-        ></div>
+        <div @click="close" class="min-h-screen w-screen bg-ctp-overlay0 opacity-50"></div>
       </div>
     </Transition>
   </Teleport>

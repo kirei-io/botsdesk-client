@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 interface TextAreaProps {
   name: string
@@ -22,7 +22,6 @@ const value = computed({
     emit('update:value', value)
   }
 })
-
 </script>
 
 <template>
@@ -34,12 +33,9 @@ const value = computed({
       :name="props.name"
       :placeholder="props.placeholder"
       :aria-label="`Textarea ${props.name}`"
-      class="resize-none w-full px-4 py-2 bg-ctp-crust rounded-md focus:bg-ctp-surface0 placeholder:text-ctp-overlay1 transition-colors duration-300 ease-in-out drop-shadow outline-none"
+      class="w-full resize-none rounded-md bg-ctp-crust px-4 py-2 outline-none drop-shadow transition-colors duration-300 ease-in-out placeholder:text-ctp-overlay1 focus:bg-ctp-surface0"
     ></textarea>
-    <div
-      v-if="props.validationMesage"
-      class="h-4 text-xs text-ctp-maroon px-4 my-2 font-semibold"
-    >
+    <div v-if="props.validationMesage" class="my-2 h-4 px-4 text-sm font-semibold text-ctp-maroon">
       <span v-show="props.isValid">
         {{ props.validationMesage }}
       </span>

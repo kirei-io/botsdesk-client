@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 interface InputTextProps {
   value: string
@@ -9,7 +9,6 @@ interface InputTextProps {
   placeholder?: string
   validationMesage?: string
   isValid?: boolean
-
 }
 
 const props = defineProps<InputTextProps>()
@@ -32,21 +31,19 @@ const value = computed({
     <label
       v-if="props.label"
       :for="props.label"
-      class="inline-block text-xs text-ctp-subtext0 px-4 mb-2 font-semibold"
+      class="mb-2 inline-block px-4 text-sm font-semibold text-ctp-subtext0"
     >
-      {{ props.label }}</label>
+      {{ props.label }}</label
+    >
     <input
       v-model="value"
       :type="props.type ?? 'text'"
       :id="props.name"
       :name="props.name"
       :placeholder="props.placeholder"
-      class="w-full px-4 py-2 bg-ctp-crust rounded-md focus:bg-ctp-surface0 outline-none placeholder:text-ctp-overlay1 transition-colors duration-300 ease-in-out drop-shadow"
-    >
-    <div
-      v-if="props.validationMesage"
-      class="h-4 text-xs text-ctp-maroon px-4 my-2 font-semibold"
-    >
+      class="w-full rounded-md bg-ctp-crust px-4 py-2 outline-none drop-shadow transition-colors duration-300 ease-in-out placeholder:text-ctp-overlay1 focus:bg-ctp-surface0"
+    />
+    <div v-if="props.validationMesage" class="my-2 h-4 px-4 text-sm font-semibold text-ctp-maroon">
       <span v-show="props.isValid">
         {{ props.validationMesage }}
       </span>

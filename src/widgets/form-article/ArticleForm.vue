@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useArticleStore } from '@/entities/customer';
-import { FormLayout, InputText, TextareaDefault } from '@/shared/ui';
+import { useArticleStore } from '@/entities/customer'
+import { FormLayout, InputText, TextareaDefault } from '@/shared/ui'
 
 const props = defineProps<{ formName: string }>()
 
@@ -11,22 +11,16 @@ const keydown = () => {
     store.onErrorReset()
   }
 }
-
-
-
 </script>
 
 <template>
   <div>
-    <div class="h-4 text-xs text-ctp-maroon px-4 my-2 font-semibold">
+    <div class="my-2 h-4 px-4 text-xs font-semibold text-ctp-maroon">
       <span v-show="store.error">
         {{ store.error?.message }}
       </span>
     </div>
-    <FormLayout
-      :id="props.formName"
-      @keydown="keydown"
-    >
+    <FormLayout :id="props.formName" @keydown="keydown">
       <InputText
         v-model:value="store.newQuestion"
         name="question"

@@ -5,11 +5,13 @@ import { DefaultApiInstance } from '@/shared/api'
 import type {
   ArticleInput,
   ArticleParams,
+  AskArticlesParams,
   CreateArticleParams,
   CreateResponse,
   FullArticleOutput,
   ListArticlesParams,
   ListArticlesResponse,
+  ListAskArticlesResponce,
   ListBusinessesParams,
   ListBusinessesResponse,
   ListChannelsResponse
@@ -33,7 +35,9 @@ export class CustomerApi {
      *
      * @path `/business/:business_id/channel/`
      */
-    channel: (business_id: string) => `/business/${business_id}/channel/`
+    channel: (business_id: string) => `/business/${business_id}/channel/`,
+
+    ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article/`
   } as const
 
   constructor(private readonly request: AxiosInstance) {
@@ -61,7 +65,6 @@ export class CustomerApi {
   public listArticles(params: ListArticlesParams): Promise<AxiosResponse<ListArticlesResponse>> {
     const url = this.path.article(params.path.business_id)
     const config = this.queryConfig(params.query)
-    console.log(url, this.request.getUri())
 
     return this.request.get(url, config)
   }
@@ -110,6 +113,13 @@ export class CustomerApi {
     const config = this.queryConfig(params.query)
 
     return this.request.get(url, config)
+  }
+
+  public askArticle(params: AskArticlesParams): Promise<AxiosResponse<ListAskArticlesResponce>> {
+    const url = this.path.ask(params.path.business_id, params.path.id)
+    const config = this.queryConfig(params.query)
+
+    return this.request(url, config)
   }
 }
 

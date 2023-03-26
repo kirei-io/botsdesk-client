@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type RouteLocationRaw, RouterLink } from 'vue-router';
+import { type RouteLocationRaw, RouterLink } from 'vue-router'
 interface RouterButtonProps {
   to: RouteLocationRaw
 }
@@ -9,7 +9,7 @@ const props = defineProps<RouterButtonProps>()
 <template>
   <RouterLink
     :to="props.to"
-    class="inline text-ctp-rosewater border-b-2 border-dotted hover:text-ctp-subtext0 hover:border-ctp-subtext0 transition-colors duration-150 ease-in-out"
+    class="inline border-b-2 border-dotted border-ctp-rosewater text-ctp-rosewater transition-colors duration-150 ease-in-out hover:border-ctp-subtext0 hover:text-ctp-subtext0"
   >
     <slot />
   </RouterLink>

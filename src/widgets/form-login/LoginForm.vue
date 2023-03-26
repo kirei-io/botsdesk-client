@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-import { useAuthStore } from '@/entities/authentication';
-import { ButtonRaised, CardLayout, FormLayout, InputText } from '@/shared/ui';
+import { useAuthStore } from '@/entities/authentication'
+import { ButtonRaised, CardLayout, FormLayout, InputText } from '@/shared/ui'
 
 interface LoginFormProps {
   title: string
@@ -12,15 +12,12 @@ const props = defineProps<LoginFormProps>()
 
 const store = useAuthStore()
 
-
 const login = ref<string>('')
 const password = ref<string>('')
 
 const emit = defineEmits<{
   (e: 'form:submit', login: string, passwor: string): void
 }>()
-
-
 
 const submit = () => {
   emit('form:submit', login.value, password.value)
@@ -33,14 +30,8 @@ const resetError = () => {
 
 <template>
   <CardLayout class="!p-8">
-    <h1 class="px-4 mb-10 text-3xl font-semibold text-ctp-subtext0">{{ props.title
-    }}</h1>
-    <FormLayout
-      @submit.prevent="submit"
-      @keydown="resetError"
-      id="form-login"
-      class="flex"
-    >
+    <h1 class="mb-10 px-4 text-3xl font-semibold text-ctp-subtext0">{{ props.title }}</h1>
+    <FormLayout @submit.prevent="submit" @keydown="resetError" id="form-login" class="flex">
       <InputText
         v-model:value="login"
         name="login"
@@ -62,7 +53,7 @@ const resetError = () => {
         {{ props.title }}
       </ButtonRaised>
     </FormLayout>
-    <div class="text-center mt-4 text-sm">
+    <div class="mt-4 text-center text-sm">
       <slot />
     </div>
   </CardLayout>

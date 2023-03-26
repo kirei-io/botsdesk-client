@@ -52,6 +52,11 @@ export interface ListBusinessesParams {
   query?: Pagination & UserId
 }
 
+export interface AskArticlesParams {
+  path: BusinessId & ArtileId
+  query?: UserId & Pagination
+}
+
 export interface CustomerErrorResponse {
   detail: string | unknown[]
 }
@@ -85,6 +90,14 @@ export type CreateResponse = {
   object_id: number
 }
 
+export type ListAskArticlesItems = {
+  ask_article_id: number
+  channel: ListChannelsItem
+  author: string
+  author_link: string
+}
+
 export type ListArticlesResponse = ListType<ShortArticleOutput>
 export type ListBusinessesResponse = ListType<BusinessInfoOutput>
 export type ListChannelsResponse = ListType<ListChannelsItem>
+export type ListAskArticlesResponce = ListType<ListAskArticlesItems>

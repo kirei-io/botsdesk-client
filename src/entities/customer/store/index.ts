@@ -10,6 +10,15 @@ export const useArticleStore = defineStore('article', () => {
   const created = ref<string | null>(null)
   const updated = ref<string | null>(null)
 
+  const askArticles = ref<
+    {
+      ask_article_id: number
+      channel: Record<string, string | number>
+      author: string
+      author_link: string
+    }[]
+  >([])
+
   const newAnswer = ref<string>('')
   const newQuestion = ref<string>('')
 
@@ -20,10 +29,6 @@ export const useArticleStore = defineStore('article', () => {
     try {
       isLoading.value = true
       const res = await customer.article({ path: { business_id, id } })
-      if ('detail' in res.data) {
-        throw new Error(String(res.data.detail))
-      }
-
       isLoading.value = false
 
       answer.value = res.data.answer_md
@@ -145,6 +150,32 @@ export const useArticleStore = defineStore('article', () => {
     }
   }
 
+  async function onAskArticle(business_id: string, id: string) {
+    try {
+      isLoading.value = true
+
+      const res = await customer.askArticle({
+        path: { business_id, id },
+        query: { skip: '0', limit: '25' }
+      })
+
+      askArticles.value = res.data.items
+
+      isLoading.value = false
+    } catch (err: any) {
+      const message = err.response?.data?.detail
+      if (err instanceof Error) {
+        if (message) {
+          error.value = { message, name: 'ERROR_AXIOS' }
+        } else {
+          error.value = err
+        }
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   function onNewValuesReset() {
     newAnswer.value = answer.value ?? ''
     newQuestion.value = question.value ?? ''
@@ -161,6 +192,7 @@ export const useArticleStore = defineStore('article', () => {
     articleId.value = null
     created.value = null
     updated.value = null
+    askArticles.value = []
     error.value = null
 
     newAnswer.value = ''
@@ -176,6 +208,7 @@ export const useArticleStore = defineStore('article', () => {
     newAnswer,
     newQuestion,
     isLoading,
+    askArticles,
     error,
     onArticle,
     onCreateArticle,
@@ -183,6 +216,7 @@ export const useArticleStore = defineStore('article', () => {
     onDeleteAtrticle,
     onNewValuesReset,
     onErrorReset,
+    onAskArticle,
     $reset
   }
 })
@@ -196,9 +230,6 @@ export const useBusinessStore = defineStore('business', () => {
     try {
       isLoading.value = true
       const res = await customer.listBusinesses({ query: { skip: '0', limit: '25' } })
-      if ('detail' in res.data) {
-        throw new Error(String(res.data.detail))
-      }
       isLoading.value = false
 
       for (const business of res.data.items) {
@@ -255,10 +286,6 @@ export const useArticlesListStore = defineStore('articles-list', () => {
           limit: String(limit)
         }
       })
-
-      if ('detail' in res.data) {
-        throw new Error(String(res.data.detail))
-      }
       isLoading.value = false
 
       totalArticles.value = res.data.total
