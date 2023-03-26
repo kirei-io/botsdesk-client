@@ -22,4 +22,5 @@ jobs:
         remote_path: /syncdata
         remote_host: 194.135.92.114
         remote_user: rsyncc
+        remote_port: 2222
         remote_key: ${{ secrets.DEPLOY_KEY }}
