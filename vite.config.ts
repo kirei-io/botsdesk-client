@@ -2,8 +2,9 @@ import { fileURLToPath, URL } from 'node:url'
 
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
-
+// http://194.135.92.114
 // https://vitejs.dev/config/
+
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -14,12 +15,14 @@ export default defineConfig({
   server: {
     proxy: {
       '/auth': {
-        target: 'http://194.135.92.114/cu',
+        target: 'https://botsdesk.com/cu',
+        secure: false,
+
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/auth/, '')
       },
       '/api': {
-        target: 'http://194.135.92.114/ag',
+        target: 'https://botsdesk.com/ag',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
