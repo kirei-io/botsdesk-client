@@ -5,7 +5,7 @@ import axios, { type CreateAxiosDefaults } from 'axios'
 
 const authConfig: CreateAxiosDefaults = {
   // baseURL: '/auth',
-  baseURL: 'https://botsdesk.com/ag',
+  baseURL: 'https://botsdesk.com/cu',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   }
@@ -13,7 +13,7 @@ const authConfig: CreateAxiosDefaults = {
 
 const defaultConfig: CreateAxiosDefaults = {
   // baseURL: '/api',
-  baseURL: 'https://botsdesk.com/cu',
+  baseURL: 'https://botsdesk.com/ag',
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${localStorage.getItem('access_token')}`

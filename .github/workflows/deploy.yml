@@ -19,7 +19,8 @@ jobs:
       with:
         switches: -avzr --delete
         path: dist/
-        remote_path: /syncdata
+        remote_path: /home/rsyncc/syncdata/panel
         remote_host: 194.135.92.114
         remote_user: rsyncc
+        remote_port: 2222
         remote_key: ${{ secrets.DEPLOY_KEY }}
