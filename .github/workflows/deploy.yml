@@ -19,7 +19,7 @@ jobs:
       with:
         switches: -avzr --delete
         path: dist/
-        remote_path: /home/rsyncc/syncdata
+        remote_path: /home/rsyncc/syncdata/panel
         remote_host: 194.135.92.114
         remote_user: rsyncc
         remote_port: 2222
