@@ -7,6 +7,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   publicPath: "/panel/",
+  base: "/panel/",
   plugins: [vue()],
   resolve: {
     alias: {
