@@ -95,6 +95,7 @@ export type ListAskArticlesItems = {
   channel: ListChannelsItem
   author: string
   author_link: string
+  created_at: string
 }
 
 export type ListArticlesResponse = ListType<ShortArticleOutput>

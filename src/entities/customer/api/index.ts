@@ -37,7 +37,7 @@ export class CustomerApi {
      */
     channel: (business_id: string) => `/business/${business_id}/channel/`,
 
-    ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article/`
+    ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article`
   } as const
 
   constructor(private readonly request: AxiosInstance) {

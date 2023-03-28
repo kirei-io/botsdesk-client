@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', () => {
     form?: Error | null
   } | null>(null)
 
-  const isAuthenticated = computed(() => !!localStorageAccessToken || !!access_token.value)
+  const isAuthenticated = computed(() => !!access_token.value)
 
   async function onSignup(email: string, password: string) {
     try {
@@ -76,8 +76,13 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function onLogout() {
-    access_token.value = null
+    $reset()
     localStorage.removeItem('access_token')
+  }
+
+  function $reset() {
+    access_token.value = null
+    error.value = null
   }
 
   return {
