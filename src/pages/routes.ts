@@ -1,5 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 
+import { useAuthStore } from '@/entities/authentication'
+import { useBusinessStore } from '@/entities/customer'
 import { ROUTE_NAME, ROUTE_PATH } from '@/shared/config'
 
 import HomeLayout from './HomeLayout.vue'
@@ -45,7 +47,11 @@ export const routes: RouteRecordRaw[] = [
   {
     path: ROUTE_PATH[ROUTE_NAME.LOGIN],
     name: ROUTE_NAME.LOGIN,
-    component: () => import('./LoginPage.vue')
+    component: () => import('./LoginPage.vue'),
+    beforeEnter: () => {
+      useBusinessStore().$reset()
+      localStorage.removeItem('access_token')
+    }
   },
   {
     path: ROUTE_PATH[ROUTE_NAME.NOT_FOUND],
