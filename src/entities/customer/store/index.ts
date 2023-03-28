@@ -16,6 +16,7 @@ export const useArticleStore = defineStore('article', () => {
       channel: Record<string, string | number>
       author: string
       author_link: string
+      created_at: string
     }[]
   >([])
 
