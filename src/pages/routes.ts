@@ -1,6 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-import { useAuthStore } from '@/entities/authentication'
 import { useBusinessStore } from '@/entities/customer'
 import { ROUTE_NAME, ROUTE_PATH } from '@/shared/config'
 
