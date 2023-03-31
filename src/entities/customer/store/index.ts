@@ -5,7 +5,9 @@ import { customer, type ListArticlesResponse } from '../api'
 
 export const useArticleStore = defineStore('article', () => {
   const answer = ref<string | null>(null)
+  const answer_md = ref<string | null>(null)
   const question = ref<string | null>(null)
+  const question_md = ref<string | null>(null)
   const articleId = ref<string | null>(null)
   const created = ref<string | null>(null)
   const updated = ref<string | null>(null)
@@ -32,14 +34,16 @@ export const useArticleStore = defineStore('article', () => {
       const res = await customer.article({ path: { business_id, id } })
       isLoading.value = false
 
-      answer.value = res.data.answer_md
-      question.value = res.data.question_md
+      answer.value = res.data.answer
+      answer_md.value = res.data.answer_md
+      question.value = res.data.question
+      question_md.value = res.data.question_md
       articleId.value = String(res.data.article_id)
       created.value = new Date(res.data.created_at).toLocaleString()
       updated.value = new Date(res.data.updated_at).toLocaleString()
 
-      newAnswer.value = answer.value
-      newQuestion.value = question.value
+      newAnswer.value = answer_md.value
+      newQuestion.value = question_md.value
     } catch (err: any) {
       const message = err.response?.data?.detail
       if (err instanceof Error) {
@@ -189,7 +193,9 @@ export const useArticleStore = defineStore('article', () => {
 
   function $reset() {
     answer.value = null
+    answer_md.value = null
     question.value = null
+    question_md.value = null
     articleId.value = null
     created.value = null
     updated.value = null
@@ -202,7 +208,9 @@ export const useArticleStore = defineStore('article', () => {
 
   return {
     answer,
+    answer_md,
     question,
+    question_md,
     articleId,
     created,
     updated,

@@ -1,19 +1,17 @@
-// const customer = new CustomerApi(DefaultApiInstance)
 import axios, { type CreateAxiosDefaults } from 'axios'
 
-// import { CustomerApi } from './customer'
+const authBaseURL = import.meta.env.DEV ? '/auth' : 'https://botsdesk.com/ag'
+const defaultBaseURL = import.meta.env.DEV ? '/api' : 'https://botsdesk.com/cu'
 
 const authConfig: CreateAxiosDefaults = {
-  // baseURL: '/auth',
-  baseURL: 'https://botsdesk.com/cu',
+  baseURL: authBaseURL,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   }
 }
 
 const defaultConfig: CreateAxiosDefaults = {
-  // baseURL: '/api',
-  baseURL: 'https://botsdesk.com/ag',
+  baseURL: defaultBaseURL,
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${localStorage.getItem('access_token')}`
@@ -23,5 +21,4 @@ const defaultConfig: CreateAxiosDefaults = {
 const AuthApiInstance = axios.create(authConfig)
 const DefaultApiInstance = axios.create(defaultConfig)
 
-// const customer = new CustomerApi(DefaultApiInstance)
 export { AuthApiInstance, DefaultApiInstance }

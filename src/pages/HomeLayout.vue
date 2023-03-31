@@ -28,10 +28,7 @@ router.beforeEach((to) => {
         <BreadcrumbsDefault />
         <div>
           <ThemeButton />
-          <RouteButtonFlat
-            :to="{ name: ROUTE_NAME.LOGIN }"
-            class="ml-2 !px-2 hover:!bg-ctp-mantle"
-          >
+          <RouteButtonFlat :to="{ name: ROUTE_NAME.LOGIN }" class="ml-2 !px-2 hover:!bg-ctp-mantle">
             <FontAwesomeIcon :icon="['fas', 'right-from-bracket']" />
             Logout
           </RouteButtonFlat>

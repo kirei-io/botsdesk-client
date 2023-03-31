@@ -1,20 +1,36 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
+  fa1,
+  fa2,
   faAngleLeft,
   faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
   faArrowLeftLong,
+  faArrowTurnRight,
   faArrowUpRightFromSquare,
+  faBold,
   faBriefcase,
+  faCode,
+  faHeading,
   faHouse,
+  faItalic,
+  faListDots,
+  faListNumeric,
+  faListOl,
+  faListUl,
+  faMinus,
   faMoon,
   faPen,
   faPlus,
+  faQuoteRight,
   faRightFromBracket,
   faRotateLeft,
   faSave,
   faSlash,
   faSpinner,
   faSun,
+  faTentArrowTurnLeft,
   faTrash
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -35,6 +51,18 @@ export const createFontAwesomeIcons = () => {
     faRotateLeft,
     faSpinner,
     faMoon,
-    faSun
+    faSun,
+    faArrowTurnRight,
+    faTentArrowTurnLeft,
+    faBold,
+    faItalic,
+    faCode,
+    faHeading,
+    faListOl,
+    faListUl,
+    fa1,
+    fa2,
+    faQuoteRight,
+    faMinus
   )
 }
