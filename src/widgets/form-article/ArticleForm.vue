@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import StarterKit from '@tiptap/starter-kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
-import { marked } from 'marked';
-import TurndownService from "turndown"
-import { computed, watch } from 'vue';
+import { marked } from 'marked'
+import TurndownService from 'turndown'
+import { computed, watch } from 'vue'
 
 import { useArticleStore } from '@/entities/customer'
 import { CardLayout, FormLayout, InputText } from '@/shared/ui'
 
-import ButtonEditor from './ui/ButtonEditor.vue';
-
+import ButtonEditor from './ui/ButtonEditor.vue'
 
 const props = defineProps<{ formName: string }>()
 
@@ -27,45 +26,44 @@ const html = computed(() => marked.parse(store.newAnswer))
 const editor = useEditor({
   content: `${html.value}`,
   extensions: [
-    StarterKit.configure(
-      {
-        bulletList: {
-          HTMLAttributes: {
-            class: 'list-disc pl-8'
-          }
+    StarterKit.configure({
+      bulletList: {
+        HTMLAttributes: {
+          class: 'list-disc pl-8'
+        }
+      },
+      orderedList: {
+        HTMLAttributes: {
+          class: 'list-decimal pl-8'
+        }
+      },
+      code: {
+        HTMLAttributes: {
+          class: 'p-2 bg-ctp-crust rounded leading-loose'
+        }
+      },
+      heading: {
+        HTMLAttributes: {
+          class: 'editor-heading leading-loose'
         },
-        orderedList: {
-          HTMLAttributes: {
-            class: 'list-decimal pl-8'
-          }
-        },
-        code: {
-          HTMLAttributes: {
-            class: 'p-2 bg-ctp-crust rounded leading-loose'
-          }
-        },
-        heading: {
-          HTMLAttributes: {
-            class: 'editor-heading leading-loose',
-          },
-          levels: [1, 2]
-        },
-        horizontalRule: {
-          HTMLAttributes: {
-            class: "border-solid border-ctp-surface1"
-          }
-        },
-        blockquote: {
-          HTMLAttributes: {
-            class: "p-2 bg-ctp-surface0 rounded my-2 text-ctp-subtext0"
-          }
+        levels: [1, 2]
+      },
+      horizontalRule: {
+        HTMLAttributes: {
+          class: 'border-solid border-ctp-surface1'
+        }
+      },
+      blockquote: {
+        HTMLAttributes: {
+          class: 'p-2 bg-ctp-surface0 rounded my-2 text-ctp-subtext0'
         }
       }
-    ),
+    })
   ],
   editorProps: {
     attributes: {
-      class: "w-full min-h-[16rem] rounded-md bg-ctp-mantle px-4 py-4 outline-none drop-shadow transition-colors duration-300 ease-in-out"
+      class:
+        'w-full min-h-[16rem] rounded-md bg-ctp-mantle px-4 py-4 outline-none drop-shadow transition-colors duration-300 ease-in-out'
     }
   },
   onUpdate() {
@@ -86,9 +84,7 @@ const serv = new TurndownService()
 
 const md = computed(() => serv.turndown(editor.value?.getHTML() ?? ''))
 
-
 console.log()
-
 </script>
 
 <template>
@@ -98,10 +94,7 @@ console.log()
         {{ store.error?.message }}
       </span>
     </div>
-    <FormLayout
-      :id="props.formName"
-      @keydown="keydown"
-    >
+    <FormLayout :id="props.formName" @keydown="keydown">
       <InputText
         v-model:value="store.newQuestion"
         name="question"
@@ -111,19 +104,10 @@ console.log()
       />
       <div v-if="editor">
         <CardLayout class="mb-4 flex gap-2 !px-4 !py-2">
-          <ButtonEditor
-            :is-active="false"
-            @click.prevent="() => editor?.commands.undo()"
-          >
-            <FontAwesomeIcon
-              :icon="['fas', 'arrow-turn-right']"
-              flip="horizontal"
-            />
+          <ButtonEditor :is-active="false" @click.prevent="() => editor?.commands.undo()">
+            <FontAwesomeIcon :icon="['fas', 'arrow-turn-right']" flip="horizontal" />
           </ButtonEditor>
-          <ButtonEditor
-            :is-active="false"
-            @click.prevent="() => editor?.commands.redo()"
-          >
+          <ButtonEditor :is-active="false" @click.prevent="() => editor?.commands.redo()">
             <FontAwesomeIcon :icon="['fas', 'arrow-turn-right']" />
           </ButtonEditor>
           <ButtonEditor

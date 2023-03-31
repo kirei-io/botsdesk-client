@@ -37,35 +37,21 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   store.$reset()
 })
-
 </script>
 
 <template>
   <main>
     <HeaderArticle>
-      <RouteButtonRaised
-        :to="{ name: ROUTE_NAME.ARTICLE_EDIT, params: route.params }"
-      >
-        <FontAwesomeIcon
-          :icon="['fas', 'pen']"
-          class="mr-2 text-xs"
-        />
+      <RouteButtonRaised :to="{ name: ROUTE_NAME.ARTICLE_EDIT, params: route.params }">
+        <FontAwesomeIcon :icon="['fas', 'pen']" class="mr-2 text-xs" />
         Edit
       </RouteButtonRaised>
-      <ButtonRaised
-        @click="deleteArticle"
-        v-show="false"
-      >
-        Delte
-      </ButtonRaised>
+      <ButtonRaised @click="deleteArticle" v-show="false"> Delte </ButtonRaised>
     </HeaderArticle>
     <div class="mt-8">
       <CardArticleAnswer v-if="store.answer_md" />
       <AskArticleList v-else-if="store.askArticles.length" />
-      <CardLayout
-        v-else-if="!store.isLoading"
-        class="text-lg font-semibold text-ctp-overlay1"
-      >
+      <CardLayout v-else-if="!store.isLoading" class="text-lg font-semibold text-ctp-overlay1">
         This article has no answer
       </CardLayout>
     </div>

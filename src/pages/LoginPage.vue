@@ -22,16 +22,10 @@ const submit = (login: string, password: string) => {
 
 const body = ref(document.querySelector('body') as HTMLBodyElement)
 body.value.className = theme.theme
-
-
 </script>
 
 <template>
   <div class="mx-auto w-96 pt-32">
-    <LoginForm
-      title="Login"
-      @form:submit="submit"
-    >
-    </LoginForm>
+    <LoginForm title="Login" @form:submit="submit"> </LoginForm>
   </div>
 </template>

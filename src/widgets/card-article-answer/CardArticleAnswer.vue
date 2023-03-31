@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { marked } from 'marked';
-import { computed } from 'vue';
+import { marked } from 'marked'
+import { computed } from 'vue'
 
-import { useArticleStore } from '@/entities/customer';
-import { CardLayout } from '@/shared/ui';
+import { useArticleStore } from '@/entities/customer'
+import { CardLayout } from '@/shared/ui'
 
 const store = useArticleStore()
 const html = computed(() => marked.parse(store.answer_md ?? ''), {})
@@ -11,15 +11,12 @@ const html = computed(() => marked.parse(store.answer_md ?? ''), {})
 
 <template>
   <CardLayout>
-    <div
-      v-html="html"
-      class="answer"
-    ></div>
+    <div v-html="html" class="answer"></div>
   </CardLayout>
 </template>
 
 <style>
-.answer>h1 {
+.answer > h1 {
   font-size: 2rem;
   line-height: 2;
 }
@@ -27,7 +24,6 @@ const html = computed(() => marked.parse(store.answer_md ?? ''), {})
 h2 {
   font-size: 1.5rem;
   line-height: 2;
-
 }
 
 ol {
@@ -47,11 +43,11 @@ code {
   border-radius: 0.25rem;
 }
 
-.answer>hr {
+.answer > hr {
   border-color: rgb(var(--ctp-surface1));
 }
 
-.answer>blockquote {
+.answer > blockquote {
   padding: 0.5rem;
   background-color: rgb(var(--ctp-surface0));
   margin: 0.5rem 0;
