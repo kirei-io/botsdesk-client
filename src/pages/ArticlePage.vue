@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
       </ButtonRaised>
     </HeaderArticle>
     <div class="mt-8">
-      <CardArticleAnswer v-if="store.answer" />
+      <CardArticleAnswer v-if="store.answer_md" />
       <AskArticleList v-else-if="store.askArticles.length" />
       <CardLayout
         v-else-if="!store.isLoading"

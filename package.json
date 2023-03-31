@@ -17,8 +17,14 @@
     "@fortawesome/free-regular-svg-icons": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@tiptap/pm": "^2.0.0-beta.220",
+    "@tiptap/starter-kit": "^2.0.0-beta.220",
+    "@tiptap/vue-3": "^2.0.0-beta.220",
+    "@types/marked": "^4.0.8",
     "axios": "^1.3.4",
+    "marked": "^4.3.0",
     "pinia": "^2.0.32",
+    "turndown": "^7.1.2",
     "vue": "^3.2.47",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.1.6"
@@ -26,6 +32,7 @@
   "devDependencies": {
     "@catppuccin/tailwindcss": "^0.1.1",
     "@rushstack/eslint-patch": "^1.2.0",
+    "@types/turndown": "^5.0.1",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^11.0.2",

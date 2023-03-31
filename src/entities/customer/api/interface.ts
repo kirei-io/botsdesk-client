@@ -65,11 +65,13 @@ export type FullArticleOutput = {
   article_id: number
   created_at: string
   updated_at: string
+  question: string
   question_md: string
+  answer: string
   answer_md: string
 }
 
-export type ShortArticleOutput = Omit<FullArticleOutput, 'answer_md'>
+export type ShortArticleOutput = Omit<FullArticleOutput, 'answer' | 'answer_md'>
 
 export type BusinessInfoOutput = {
   name: string
