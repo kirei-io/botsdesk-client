@@ -6,14 +6,15 @@ import { marked } from 'marked'
 import TurndownService from 'turndown'
 import { computed, watch } from 'vue'
 
-import { useArticleStore } from '@/entities/customer'
-import { CardLayout, FormLayout, InputText } from '@/shared/ui'
+import { useArticleStore, useTagStore } from '@/entities/customer'
+import { ButtonFlat, CardLayout, FormLayout, InputText } from '@/shared/ui'
 
 import ButtonEditor from './ui/ButtonEditor.vue'
 
 const props = defineProps<{ formName: string }>()
 
 const store = useArticleStore()
+const tag = useTagStore()
 
 const keydown = () => {
   if (store.error) {
@@ -84,7 +85,21 @@ const serv = new TurndownService()
 
 const md = computed(() => serv.turndown(editor.value?.getHTML() ?? ''))
 
-console.log()
+const selectTag = (tag_id?: string) => {
+  if (tag_id) {
+    if (tag.selectedTag.has(tag_id)) {
+      tag.selectedTag.delete(tag_id)
+    } else {
+      tag.selectedTag.add(tag_id)
+    }
+  } else {
+    tag.selectedTag.clear()
+  }
+}
+
+const isSelectedTag = (tag_id: string) => {
+  return tag.selectedTag.has(tag_id)
+}
 </script>
 
 <template>
@@ -102,6 +117,26 @@ console.log()
         placeholder="Enter your question"
         label="Question"
       />
+
+      <div>
+        <div class="mb-2 px-4 text-sm font-semibold text-ctp-subtext0">Tags</div>
+        <CardLayout class="mb-8">
+          <div v-if="tag.listTags && tag.listTags.total > 0" class="flex flex-wrap gap-4">
+            <ButtonFlat
+              v-for="(tagItem, index) of tag.listTags?.items"
+              :key="index"
+              :class="{
+                'bg-ctp-crust': isSelectedTag(String(tagItem.tag_id)),
+                'hover:bg-ctp-base': isSelectedTag(String(tagItem.tag_id))
+              }"
+              @click.prevent="() => selectTag(String(tagItem.tag_id))"
+            >
+              {{ tagItem.name }}
+            </ButtonFlat>
+          </div>
+          <div v-else class="font-semibold text-ctp-overlay1">No tags</div>
+        </CardLayout>
+      </div>
       <div v-if="editor">
         <CardLayout class="mb-4 flex gap-2 !px-4 !py-2">
           <ButtonEditor :is-active="false" @click.prevent="() => editor?.commands.undo()">

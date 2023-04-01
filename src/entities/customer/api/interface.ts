@@ -7,8 +7,12 @@ type BusinessId = {
   business_id: string
 }
 
-type ArtileId = {
+type ArticleId = {
   id: string
+}
+
+type TagId = {
+  tag_id: string
 }
 
 type Pagination = {
@@ -34,13 +38,33 @@ export type ArticleInput = {
 }
 
 export interface ArticleParams {
-  path: BusinessId & ArtileId
+  path: BusinessId & ArticleId
   query?: UserId
+}
+
+export interface ListChannelsParams {
+  path: BusinessId
+  query?: Pagination & UserId
 }
 
 export interface ListArticlesParams {
   path: BusinessId
+  query?: Pagination &
+    UserId & {
+      only?: 'all' | 'answered' | 'unanswered'
+      with_tag?: string[]
+    }
+}
+
+export interface ListTagsParams {
+  path: BusinessId
   query?: Pagination & UserId
+}
+
+export interface TagItem {
+  tag_id: number
+  name: string
+  created_at: string
 }
 
 export interface CreateArticleParams {
@@ -53,7 +77,7 @@ export interface ListBusinessesParams {
 }
 
 export interface AskArticlesParams {
-  path: BusinessId & ArtileId
+  path: BusinessId & ArticleId
   query?: UserId & Pagination
 }
 
@@ -109,7 +133,27 @@ export interface GetBusinessTokenResponse {
   access_token: string
 }
 
+export interface TagParams {
+  path: BusinessId & ArticleId & TagId
+  query?: UserId
+}
+
+export interface CreateTagParams {
+  path: BusinessId
+  query?: UserId
+}
+
+export interface RemoveTagParams {
+  path: BusinessId & TagId
+  query?: UserId
+}
+
+export interface CreateTagResponce {
+  object_id: number
+}
+
 export type ListArticlesResponse = ListType<ShortArticleOutput>
 export type ListBusinessesResponse = ListType<BusinessInfoOutput>
 export type ListChannelsResponse = ListType<ListChannelsItem>
 export type ListAskArticlesResponce = ListType<ListAskArticlesItems>
+export type ListTagsResponce = ListType<TagItem>

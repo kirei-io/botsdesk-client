@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { push } from '@/entities/push/api'
 
 import { customer, type ListArticlesResponse } from '../api'
+import type { ListTagsResponce } from '../api/interface'
 
 export const useArticleStore = defineStore('article', () => {
   const answer = ref<string | null>(null)
@@ -14,6 +15,7 @@ export const useArticleStore = defineStore('article', () => {
   const created = ref<string | null>(null)
   const updated = ref<string | null>(null)
 
+  const articleTags = ref<Set<string>>(new Set())
   const askArticles = ref<
     {
       ask_article_id: number
@@ -60,7 +62,7 @@ export const useArticleStore = defineStore('article', () => {
     }
   }
 
-  async function onCreateArticle(business_id: string) {
+  async function onCreateArticle(business_id: string, tags?: string[]) {
     try {
       if (!newQuestion.value) {
         throw new Error('new question is empty')
@@ -71,7 +73,7 @@ export const useArticleStore = defineStore('article', () => {
 
       const question_md = newQuestion.value
       const answer_md = newAnswer.value
-      await customer.createArticle(
+      const res = await customer.createArticle(
         {
           path: {
             business_id
@@ -82,6 +84,21 @@ export const useArticleStore = defineStore('article', () => {
           answer_md
         }
       )
+      if (tags) {
+        tags.forEach(async (tag_id) => {
+          try {
+            await customer.assignTag({
+              path: {
+                business_id,
+                id: String(res.data.object_id),
+                tag_id
+              }
+            })
+          } catch (error) {
+            console.log('fix add tag')
+          }
+        })
+      }
     } catch (err: any) {
       const message = err.response?.data?.detail
       if (err instanceof Error) {
@@ -96,9 +113,18 @@ export const useArticleStore = defineStore('article', () => {
     }
   }
 
-  async function onEditArticle(business_id: string, id: string) {
+  async function onEditArticle(
+    business_id: string,
+    id: string,
+    newTags?: string[],
+    removeTags?: string[]
+  ) {
     try {
-      if (newQuestion.value === question.value && newAnswer.value === answer.value) {
+      if (
+        newQuestion.value === question.value &&
+        newAnswer.value === answer.value &&
+        newTags === undefined
+      ) {
         throw new Error(`Old value is equal to new value`)
       }
 
@@ -117,6 +143,38 @@ export const useArticleStore = defineStore('article', () => {
           answer_md
         }
       )
+
+      if (removeTags) {
+        removeTags.forEach(async (tag_id) => {
+          try {
+            customer.revokeTag({
+              path: {
+                business_id,
+                id,
+                tag_id
+              }
+            })
+          } catch (error) {
+            console.log('fix add tag')
+          }
+        })
+      }
+
+      if (newTags) {
+        newTags.forEach(async (tag_id) => {
+          try {
+            await customer.assignTag({
+              path: {
+                business_id,
+                id,
+                tag_id
+              }
+            })
+          } catch (error) {
+            console.log('fix add tag')
+          }
+        })
+      }
 
       if (answer.value === '') {
         const res = await customer.getBusinessToken({
@@ -220,6 +278,7 @@ export const useArticleStore = defineStore('article', () => {
 
     newAnswer.value = ''
     newQuestion.value = ''
+    articleTags.value = new Set()
   }
 
   return {
@@ -235,6 +294,7 @@ export const useArticleStore = defineStore('article', () => {
     isLoading,
     askArticles,
     error,
+    articleTags,
     onArticle,
     onCreateArticle,
     onEditArticle,
@@ -298,8 +358,15 @@ export const useArticlesListStore = defineStore('articles-list', () => {
   const error = ref<Error | null>(null)
   const articlesList = ref<ListArticlesResponse['items'] | []>([])
   const totalArticles = ref<number | null>(null)
+  const articlesOnlyFilter = ref<'all' | 'answered' | 'unanswered'>('all')
 
-  async function onArticlesList(business_id: string, skip = 0, limit = 10) {
+  async function onArticlesList(
+    business_id: string,
+    skip = 0,
+    limit = 10,
+    tagId?: string[],
+    only: 'all' | 'answered' | 'unanswered' = 'all'
+  ) {
     try {
       isLoading.value = true
       const res = await customer.listArticles({
@@ -308,9 +375,12 @@ export const useArticlesListStore = defineStore('articles-list', () => {
         },
         query: {
           skip: String(skip),
-          limit: String(limit)
+          limit: String(limit),
+          with_tag: tagId ?? [],
+          only: only
         }
       })
+
       isLoading.value = false
 
       totalArticles.value = res.data.total
@@ -333,6 +403,7 @@ export const useArticlesListStore = defineStore('articles-list', () => {
     error.value = null
     articlesList.value = []
     totalArticles.value = null
+    articlesOnlyFilter.value = 'all'
   }
 
   return {
@@ -340,7 +411,115 @@ export const useArticlesListStore = defineStore('articles-list', () => {
     totalArticles,
     isLoading,
     error,
+    articlesOnlyFilter,
     onArticlesList,
+    $reset
+  }
+})
+
+export const useTagStore = defineStore('tag', () => {
+  const isLoading = ref<boolean>(false)
+  const listTags = ref<ListTagsResponce | null>(null)
+  const selectedTag = ref<Set<string>>(new Set())
+  const error = ref<Error | null>(null)
+
+  async function onListTags(business_id: string) {
+    try {
+      isLoading.value = true
+      const res = await customer.listTags({
+        path: {
+          business_id
+        },
+        query: {
+          skip: '0',
+          limit: '25'
+        }
+      })
+
+      listTags.value = res.data
+
+      isLoading.value = false
+    } catch (err: any) {
+      const message = err.response?.data?.detail
+      if (err instanceof Error) {
+        if (message) {
+          error.value = { message, name: 'ERROR_AXIOS' }
+        } else {
+          error.value = err
+        }
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function onCreateTag(business_id: string, name: string) {
+    try {
+      isLoading.value = true
+
+      await customer.createTag(
+        {
+          path: {
+            business_id
+          }
+        },
+        name
+      )
+
+      isLoading.value = false
+    } catch (err: any) {
+      const message = err.response?.data?.detail
+      if (err instanceof Error) {
+        if (message) {
+          error.value = { message, name: 'ERROR_AXIOS' }
+        } else {
+          error.value = err
+        }
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  async function onRemoveTag(business_id: string, tag_id: string) {
+    try {
+      isLoading.value = true
+
+      await customer.removeTag({
+        path: {
+          business_id,
+          tag_id
+        }
+      })
+
+      isLoading.value = false
+    } catch (err: any) {
+      const message = err.response?.data?.detail
+      if (err instanceof Error) {
+        if (message) {
+          error.value = { message, name: 'ERROR_AXIOS' }
+        } else {
+          error.value = err
+        }
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  function $reset() {
+    error.value = null
+    listTags.value = null
+    selectedTag.value = new Set()
+  }
+  return {
+    isLoading,
+    selectedTag,
+    error,
+    listTags,
+    onCreateTag,
+    onRemoveTag,
+    onListTags,
     $reset
   }
 })

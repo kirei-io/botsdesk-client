@@ -2,10 +2,7 @@ import type { AxiosInstance, AxiosResponse } from 'axios'
 
 import { PushApiInstance } from '@/shared/api'
 
-import type {
-  SendSubscriptionsInput
-} from './interface'
-
+import type { SendSubscriptionsInput } from './interface'
 
 export class PushApi {
   private readonly path = {
