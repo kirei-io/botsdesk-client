@@ -39,7 +39,7 @@ const nextPage = (skip: number, limit: number) => {
 }
 
 onMounted(() => {
-  store.onArticlesList(String(route.params.business_id))
+  store.onArticlesList(String(route.params.business_id), 0, 10, selectedTags.value)
 })
 </script>
 
@@ -53,7 +53,10 @@ onMounted(() => {
         :to="{ name: ROUTE_NAME.ARTICLE_CREATE, params: route.params }"
         class="py-1"
       >
-        <FontAwesomeIcon :icon="['fas', 'plus']" class="mr-2" />
+        <FontAwesomeIcon
+          :icon="['fas', 'plus']"
+          class="mr-2"
+        />
         <span>Create new</span>
       </RouteButtonRaised>
       <div>
@@ -81,7 +84,10 @@ onMounted(() => {
       </div>
     </div>
 
-    <TablePagination :total="store.totalArticles ?? 0" @update="nextPage" />
+    <TablePagination
+      :total="store.totalArticles ?? 0"
+      @update="nextPage"
+    />
   </HeaderLayout>
   <ArticleTable />
 </template>
