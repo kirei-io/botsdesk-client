@@ -90,8 +90,15 @@ onMounted(async () => {
 </script>
 
 <template>
-  <nav class="flex min-h-screen w-1/6 flex-col gap-2 bg-ctp-mantle px-2 py-4 shadow-lg">
-    <NavLink :to="{ name: ROUTE_NAME.HOME }" :icon="['fas', 'home']" label="Home" class="mb-2" />
+  <nav
+    class="flex min-h-screen w-1/6 flex-col gap-2 bg-ctp-mantle px-2 py-4 shadow-lg"
+  >
+    <NavLink
+      :to="{ name: ROUTE_NAME.HOME }"
+      :icon="['fas', 'home']"
+      label="Home"
+      class="mb-2"
+    />
     <div
       v-for="([business_id, business], index) of store.businessMap"
       :key="index"
@@ -111,9 +118,18 @@ onMounted(async () => {
         @click="() => selectTag()"
       />
       <div>
-        <div v-if="selectedBusiness === business_id" class="flex flex-col gap-2">
-          <ButtonFlat class="ml-8 text-left" @click="() => createTagModalOpen()">
-            <FontAwesomeIcon :icon="['fas', 'plus']" class="mr-2 text-sm" />
+        <div
+          v-if="selectedBusiness === business_id"
+          class="flex flex-col gap-2"
+        >
+          <ButtonFlat
+            class="ml-8 text-left"
+            @click="() => createTagModalOpen()"
+          >
+            <FontAwesomeIcon
+              :icon="['fas', 'plus']"
+              class="mr-2 text-sm"
+            />
             Add one
           </ButtonFlat>
           <ButtonFlat
@@ -134,7 +150,7 @@ onMounted(async () => {
                 'hover:!text-ctp-overlay1': isSelectedTag(String(tagItem.tag_id)),
                 'pointer-events-none': isSelectedTag(String(tagItem.tag_id))
               }"
-              class="!bg-transparent px-4 text-sm hover:text-ctp-maroon"
+              class="!bg-transparent px-4 text-sm hover:!text-ctp-maroon"
             >
               <FontAwesomeIcon :icon="['fas', 'trash']" />
             </ButtonFlat>
@@ -147,11 +163,16 @@ onMounted(async () => {
       @close="() => (isCreateOpen = false)"
       modal-class="py-8 px-12"
     >
-      <h3 class="mb-6 border-b border-ctp-surface0 pb-2 text-xl font-semibold text-ctp-subtext0">
+      <h3
+        class="mb-6 border-b border-ctp-surface0 pb-2 text-xl font-semibold text-ctp-subtext0"
+      >
         Create a new tag
       </h3>
 
-      <FormLayout id="form-create-tag" @submit.prevent="() => createTag()">
+      <FormLayout
+        id="form-create-tag"
+        @submit.prevent="() => createTag()"
+      >
         <InputText
           v-model:value="createTagName"
           :is-valid="isValidationCreateTag"
@@ -162,25 +183,31 @@ onMounted(async () => {
         />
         <div class="mt-6 flex justify-end gap-4">
           <ButtonRaised form="form-create-tag">Create</ButtonRaised>
-          <ButtonRaised @click.prevent="() => (isCreateOpen = false)"> Cancel </ButtonRaised>
+          <ButtonRaised @click.prevent="() => (isCreateOpen = false)"> Cancel
+          </ButtonRaised>
         </div>
-      </FormLayout>
-    </ModalDefault>
+    </FormLayout>
+  </ModalDefault>
 
-    <ModalDefault
-      :is-open="isRemoveOpen"
-      @close="() => (isRemoveOpen = false)"
-      modal-class="py-8 px-12"
+  <ModalDefault
+    :is-open="isRemoveOpen"
+    @close="() => (isRemoveOpen = false)"
+    modal-class="py-8 px-12"
+  >
+    <h3
+      class="mb-6 border-b border-ctp-surface0 pb-2 text-xl font-semibold text-ctp-subtext0"
     >
-      <h3 class="mb-6 border-b border-ctp-surface0 pb-2 text-xl font-semibold text-ctp-subtext0">
-        Do you really want to remove the tag?
-      </h3>
-      <FormLayout id="form-remove-tag" @submit.prevent="() => removeTag()">
-        <div class="flex justify-end gap-4">
-          <ButtonRaised form="form-remove-tag">Delete</ButtonRaised>
-          <ButtonRaised @click.prevent="() => (isRemoveOpen = false)"> Cancel </ButtonRaised>
-        </div>
-      </FormLayout>
-    </ModalDefault>
-  </nav>
-</template>
+      Do you really want to remove the tag?
+    </h3>
+    <FormLayout
+      id="form-remove-tag"
+      @submit.prevent="() => removeTag()"
+    >
+      <div class="flex justify-end gap-4">
+        <ButtonRaised form="form-remove-tag">Delete</ButtonRaised>
+        <ButtonRaised @click.prevent="() => (isRemoveOpen = false)"> Cancel
+        </ButtonRaised>
+      </div>
+    </FormLayout>
+  </ModalDefault>
+</nav></template>

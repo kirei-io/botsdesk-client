@@ -12,7 +12,7 @@ import { TablePagination } from '@/widgets/table-pagination'
 const route = useRoute()
 const store = useArticlesListStore()
 const businessStore = useBusinessStore()
-const selectedBusiness = computed(() => String(route.params.business_id))
+const selectedBusiness = computed(() => String(route.params.business_id ?? ''))
 const tag = useTagStore()
 const selectedTags = computed(() => Array.from(tag.selectedTag))
 const selectOnlyFilter = computed(() => store.articlesOnlyFilter)
@@ -22,16 +22,21 @@ const title = computed(() => {
 
 watch(selectedBusiness, () => {
   if (selectedBusiness.value) {
+    console.log(selectedBusiness.value)
     store.onArticlesList(selectedBusiness.value)
   }
 })
 
 watch(selectedTags, () => {
-  store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value)
+  if (selectedBusiness.value) {
+    store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value)
+  }
 })
 
 watch(selectOnlyFilter, () => {
-  store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value, selectOnlyFilter.value)
+  if (selectedBusiness.value) {
+    store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value, selectOnlyFilter.value)
+  }
 })
 
 const nextPage = (skip: number, limit: number) => {
@@ -39,7 +44,7 @@ const nextPage = (skip: number, limit: number) => {
 }
 
 onMounted(() => {
-  store.onArticlesList(String(route.params.business_id))
+  store.onArticlesList(String(route.params.business_id), 0, 10, selectedTags.value)
 })
 </script>
 
@@ -53,7 +58,10 @@ onMounted(() => {
         :to="{ name: ROUTE_NAME.ARTICLE_CREATE, params: route.params }"
         class="py-1"
       >
-        <FontAwesomeIcon :icon="['fas', 'plus']" class="mr-2" />
+        <FontAwesomeIcon
+          :icon="['fas', 'plus']"
+          class="mr-2"
+        />
         <span>Create new</span>
       </RouteButtonRaised>
       <div>
@@ -81,7 +89,10 @@ onMounted(() => {
       </div>
     </div>
 
-    <TablePagination :total="store.totalArticles ?? 0" @update="nextPage" />
+    <TablePagination
+      :total="store.totalArticles ?? 0"
+      @update="nextPage"
+    />
   </HeaderLayout>
   <ArticleTable />
 </template>

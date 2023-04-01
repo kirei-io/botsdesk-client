@@ -23,9 +23,11 @@ const submit = () => {
     oldTags: string[] | undefined = undefined
   if (tag.selectedTag.size) {
     newTags = Array.from(tag.selectedTag)
-    if (tag.listTags?.items) {
-      oldTags = tag.listTags.items.map(({ tag_id }) => String(tag_id))
-    }
+
+  }
+
+  if (tag.listTags?.items) {
+    oldTags = tag.listTags.items.map(({ tag_id }) => String(tag_id))
   }
   store.onEditArticle(business_id.value, id.value, newTags, oldTags)
   if (!store.error) {
@@ -54,13 +56,22 @@ const resetValues = () => {
 <template>
   <HeaderArticle>
     <ButtonRaised :form="formName">
-      <FontAwesomeIcon :icon="['fas', 'save']" class="mr-1 text-xs" />
+      <FontAwesomeIcon
+        :icon="['fas', 'save']"
+        class="mr-1 text-xs"
+      />
       Save
     </ButtonRaised>
     <ButtonRaised @click="resetValues">
-      <FontAwesomeIcon :icon="['fas', 'rotate-left']" class="mr-1 text-xs" />
+      <FontAwesomeIcon
+        :icon="['fas', 'rotate-left']"
+        class="mr-1 text-xs"
+      />
       Reset
     </ButtonRaised>
   </HeaderArticle>
-  <ArticleForm :form-name="formName" @submit.prevent="submit" />
+  <ArticleForm
+    :form-name="formName"
+    @submit.prevent="submit"
+  />
 </template>
