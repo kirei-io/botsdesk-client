@@ -9,6 +9,8 @@ import type {
   CreateArticleParams,
   CreateResponse,
   FullArticleOutput,
+  GetBusinessTokenParams,
+  GetBusinessTokenResponse,
   ListArticlesParams,
   ListArticlesResponse,
   ListAskArticlesResponce,
@@ -37,7 +39,9 @@ export class CustomerApi {
      */
     channel: (business_id: string) => `/business/${business_id}/channel/`,
 
-    ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article`
+    ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article`,
+
+    business_token: (business_id: string) => `/business/${business_id}/token`
   } as const
 
   constructor(private readonly request: AxiosInstance) {
@@ -120,6 +124,15 @@ export class CustomerApi {
     const config = this.queryConfig(params.query)
 
     return this.request(url, config)
+  }
+
+  public getBusinessToken(
+    params: GetBusinessTokenParams
+  ): Promise<AxiosResponse<GetBusinessTokenResponse>> {
+    const url = this.path.business_token(params.path.business_id)
+    const config = this.queryConfig(params.query)
+
+    return this.request.get(url, config)
   }
 }
 

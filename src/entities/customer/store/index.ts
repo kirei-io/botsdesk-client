@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { push } from '@/entities/push/api'
+
 import { customer, type ListArticlesResponse } from '../api'
 
 export const useArticleStore = defineStore('article', () => {
@@ -115,6 +117,20 @@ export const useArticleStore = defineStore('article', () => {
           answer_md
         }
       )
+
+      if (answer.value === '') {
+        const res = await customer.getBusinessToken({
+          path: {
+            business_id
+          }
+        })
+        localStorage.setItem('business_access_token', res.data.access_token)
+        await push.send({
+          article_id: { id },
+          title: 'We have answer for you',
+          body: 'Click on this notification for read answer for you'
+        })
+      }
     } catch (err: any) {
       const message = err.response?.data?.detail
       if (err instanceof Error) {
