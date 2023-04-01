@@ -123,7 +123,8 @@ export const useArticleStore = defineStore('article', () => {
       if (
         newQuestion.value === question.value &&
         newAnswer.value === answer.value &&
-        newTags === undefined
+        newTags === undefined &&
+        removeTags === undefined
       ) {
         throw new Error(`Old value is equal to new value`)
       }
