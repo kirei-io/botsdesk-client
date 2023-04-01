@@ -24,7 +24,7 @@ const close = () => emit('close')
       mode="in-out"
     >
       <div v-show="props.isOpen" class="absolute top-0 left-0 z-10 text-ctp-text">
-        <CardLayout :class="modalClass" class="absolute top-1/4 left-2/4 z-50 mx-auto">
+        <CardLayout :class="modalClass" class="absolute top-1/4 left-1/3 z-50 mx-auto">
           <slot />
         </CardLayout>
         <div @click="close" class="min-h-screen w-screen bg-ctp-overlay0 opacity-50"></div>

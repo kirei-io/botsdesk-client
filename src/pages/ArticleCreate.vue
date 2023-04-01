@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useArticleStore } from '@/entities/customer'
+import { useArticleStore, useTagStore } from '@/entities/customer'
 import { ButtonRaised } from '@/shared/ui'
 import { ArticleForm } from '@/widgets/form-article'
 import { HeaderArticle } from '@/widgets/header-article'
@@ -10,11 +10,16 @@ import { HeaderArticle } from '@/widgets/header-article'
 const formName = 'create-article-form'
 
 const store = useArticleStore()
+const tag = useTagStore()
 const route = useRoute()
 const router = useRouter()
 
 const submit = () => {
-  store.onCreateArticle(String(route.params.business_id))
+  let tags: string[] | undefined = undefined
+  if (tag.selectedTag.size) {
+    tags = Array.from(tag.selectedTag)
+  }
+  store.onCreateArticle(String(route.params.business_id), tags)
   if (!store.error) {
     router.back()
   }

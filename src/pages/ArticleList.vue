@@ -3,28 +3,38 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useArticlesListStore, useBusinessStore } from '@/entities/customer/'
+import { useArticlesListStore, useBusinessStore, useTagStore } from '@/entities/customer/'
 import { ROUTE_NAME } from '@/shared/config'
-import { HeaderLayout, RouteButtonRaised } from '@/shared/ui'
+import { ButtonFlat, HeaderLayout, RouteButtonRaised } from '@/shared/ui'
 import { ArticleTable } from '@/widgets/table-article'
 import { TablePagination } from '@/widgets/table-pagination'
 
 const route = useRoute()
 const store = useArticlesListStore()
 const businessStore = useBusinessStore()
-
+const selectedBusiness = computed(() => String(route.params.business_id))
+const tag = useTagStore()
+const selectedTags = computed(() => Array.from(tag.selectedTag))
+const selectOnlyFilter = computed(() => store.articlesOnlyFilter)
 const title = computed(() => {
   return businessStore.businessMap.get(String(route.params.business_id))?.name
 })
 
-watch(route, () => {
-  if (route.params.business_id) {
-    store.onArticlesList(String(route.params.business_id))
+watch(selectedBusiness, () => {
+  if (selectedBusiness.value) {
+    store.onArticlesList(selectedBusiness.value)
   }
 })
 
+watch(selectedTags, () => {
+  store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value)
+})
+
+watch(selectOnlyFilter, () => {
+  store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value, selectOnlyFilter.value)
+})
+
 const nextPage = (skip: number, limit: number) => {
-  // TODO: add skip and limit in route.query
   store.onArticlesList(String(route.params.business_id), skip - 1, limit)
 }
 
@@ -46,7 +56,31 @@ onMounted(() => {
         <FontAwesomeIcon :icon="['fas', 'plus']" class="mr-2" />
         <span>Create new</span>
       </RouteButtonRaised>
+      <div>
+        <ButtonFlat
+          class="text-sm"
+          :class="{ '!text-ctp-rosewater': store.articlesOnlyFilter === 'all' }"
+          @click="() => (store.articlesOnlyFilter = 'all')"
+        >
+          All
+        </ButtonFlat>
+        <ButtonFlat
+          class="text-sm"
+          :class="{ '!text-ctp-rosewater': store.articlesOnlyFilter === 'answered' }"
+          @click="() => (store.articlesOnlyFilter = 'answered')"
+        >
+          Answered
+        </ButtonFlat>
+        <ButtonFlat
+          class="text-sm"
+          :class="{ '!text-ctp-rosewater': store.articlesOnlyFilter === 'unanswered' }"
+          @click="() => (store.articlesOnlyFilter = 'unanswered')"
+        >
+          Unanswered
+        </ButtonFlat>
+      </div>
     </div>
+
     <TablePagination :total="store.totalArticles ?? 0" @update="nextPage" />
   </HeaderLayout>
   <ArticleTable />

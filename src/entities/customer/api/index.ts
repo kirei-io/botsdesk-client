@@ -8,6 +8,8 @@ import type {
   AskArticlesParams,
   CreateArticleParams,
   CreateResponse,
+  CreateTagParams,
+  CreateTagResponce,
   FullArticleOutput,
   GetBusinessTokenParams,
   GetBusinessTokenResponse,
@@ -16,7 +18,12 @@ import type {
   ListAskArticlesResponce,
   ListBusinessesParams,
   ListBusinessesResponse,
-  ListChannelsResponse
+  ListChannelsParams,
+  ListChannelsResponse,
+  ListTagsParams,
+  ListTagsResponce,
+  RemoveTagParams,
+  TagParams
 } from './interface'
 
 export class CustomerApi {
@@ -41,7 +48,14 @@ export class CustomerApi {
 
     ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article`,
 
-    business_token: (business_id: string) => `/business/${business_id}/token`
+    business_token: (business_id: string) => `/business/${business_id}/token`,
+
+    tag: (business_id: string) => `/business/${business_id}/tag/`,
+
+    tagArticle: (business_id: string, id: string, tag_id: string) =>
+      `/business/${business_id}/article/${id}/tag/${tag_id}`,
+
+    removeTag: (business_id: string, tag_id: string) => `/business/${business_id}/tag/${tag_id}`
   } as const
 
   constructor(private readonly request: AxiosInstance) {
@@ -57,11 +71,24 @@ export class CustomerApi {
     )
   }
 
-  private queryConfig<Q extends Record<string, unknown>>(
+  private queryConfig<Q extends Record<string, unknown | unknown[]>>(
     query?: Q
   ): AxiosRequestConfig | undefined {
-    if (query) {
-      return { params: query }
+    if (typeof query === 'object' && typeof query !== null) {
+      const param = new URLSearchParams()
+      for (const key in query) {
+        const queryValue = query[key]
+
+        if (Array.isArray(queryValue)) {
+          queryValue.forEach((value) => {
+            param.append(key, String(value))
+          })
+        } else {
+          param.append(key, String(queryValue))
+        }
+      }
+
+      return { params: param }
     }
     return undefined
   }
@@ -103,7 +130,7 @@ export class CustomerApi {
     return this.request.delete(url, config)
   }
 
-  public listChannels(params: ListArticlesParams): Promise<AxiosResponse<ListChannelsResponse>> {
+  public listChannels(params: ListChannelsParams): Promise<AxiosResponse<ListChannelsResponse>> {
     const url = this.path.channel(params.path.business_id)
     const config = this.queryConfig(params.query)
 
@@ -133,6 +160,45 @@ export class CustomerApi {
     const config = this.queryConfig(params.query)
 
     return this.request.get(url, config)
+  }
+
+  public listTags(params: ListTagsParams): Promise<AxiosResponse<ListTagsResponce>> {
+    const url = this.path.tag(params.path.business_id)
+
+    const config = this.queryConfig(params.query)
+
+    return this.request.get(url, config)
+  }
+
+  public assignTag(params: TagParams): Promise<AxiosResponse<null>> {
+    const url = this.path.tagArticle(params.path.business_id, params.path.id, params.path.tag_id)
+    const config = this.queryConfig(params.query)
+
+    return this.request.post(url, config)
+  }
+
+  public revokeTag(params: TagParams): Promise<AxiosResponse<null>> {
+    const url = this.path.tagArticle(params.path.business_id, params.path.id, params.path.tag_id)
+    const config = this.queryConfig(params.query)
+
+    return this.request.delete(url, config)
+  }
+
+  public createTag(
+    params: CreateTagParams,
+    name: string
+  ): Promise<AxiosResponse<CreateTagResponce>> {
+    const url = this.path.tag(params.path.business_id)
+    const config = this.queryConfig(params.query)
+
+    return this.request.post(url, { name }, config)
+  }
+
+  public removeTag(params: RemoveTagParams): Promise<AxiosResponse<null>> {
+    const url = this.path.removeTag(params.path.business_id, params.path.tag_id)
+    const config = this.queryConfig(params.query)
+
+    return this.request.delete(url, config)
   }
 }
 
