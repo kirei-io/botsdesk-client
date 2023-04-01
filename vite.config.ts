@@ -6,8 +6,8 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 
 export default defineConfig({
-  publicPath: "/panel/",
-  base: "/panel/",
+  publicPath: '/panel/',
+  base: '/panel/',
   plugins: [vue()],
   resolve: {
     alias: {
@@ -28,6 +28,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/push': {
+        target: 'https://botsdesk.com/ph',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/push/, '')
       }
     }
   }

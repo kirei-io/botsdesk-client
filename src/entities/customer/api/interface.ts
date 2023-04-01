@@ -100,12 +100,12 @@ export type ListAskArticlesItems = {
   created_at: string
 }
 
-export interface GetBusinessTokenParams = {
+export interface GetBusinessTokenParams {
   path: BusinessId
   query?: UserId
 }
 
-export interface GetBusinessTokenResponse = {
+export interface GetBusinessTokenResponse {
   access_token: string
 }
 

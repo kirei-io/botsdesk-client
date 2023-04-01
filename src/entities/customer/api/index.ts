@@ -9,14 +9,14 @@ import type {
   CreateArticleParams,
   CreateResponse,
   FullArticleOutput,
+  GetBusinessTokenParams,
+  GetBusinessTokenResponse,
   ListArticlesParams,
   ListArticlesResponse,
   ListAskArticlesResponce,
   ListBusinessesParams,
   ListBusinessesResponse,
-  ListChannelsResponse,
-  GetBusinessTokenParams,
-  GetBusinessTokenResponse
+  ListChannelsResponse
 } from './interface'
 
 export class CustomerApi {
@@ -41,7 +41,7 @@ export class CustomerApi {
 
     ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article`,
 
-    business_token: (business_id) => `/business/${business_id}/token`
+    business_token: (business_id: string) => `/business/${business_id}/token`
   } as const
 
   constructor(private readonly request: AxiosInstance) {
