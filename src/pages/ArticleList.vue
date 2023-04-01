@@ -12,7 +12,7 @@ import { TablePagination } from '@/widgets/table-pagination'
 const route = useRoute()
 const store = useArticlesListStore()
 const businessStore = useBusinessStore()
-const selectedBusiness = computed(() => String(route.params.business_id))
+const selectedBusiness = computed(() => String(route.params.business_id ?? ''))
 const tag = useTagStore()
 const selectedTags = computed(() => Array.from(tag.selectedTag))
 const selectOnlyFilter = computed(() => store.articlesOnlyFilter)
@@ -22,16 +22,21 @@ const title = computed(() => {
 
 watch(selectedBusiness, () => {
   if (selectedBusiness.value) {
+    console.log(selectedBusiness.value)
     store.onArticlesList(selectedBusiness.value)
   }
 })
 
 watch(selectedTags, () => {
-  store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value)
+  if (selectedBusiness.value) {
+    store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value)
+  }
 })
 
 watch(selectOnlyFilter, () => {
-  store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value, selectOnlyFilter.value)
+  if (selectedBusiness.value) {
+    store.onArticlesList(selectedBusiness.value, 0, 10, selectedTags.value, selectOnlyFilter.value)
+  }
 })
 
 const nextPage = (skip: number, limit: number) => {
