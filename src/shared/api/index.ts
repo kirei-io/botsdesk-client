@@ -2,6 +2,7 @@ import axios, { type CreateAxiosDefaults } from 'axios'
 
 const authBaseURL = import.meta.env.DEV ? '/auth' : 'https://botsdesk.com/cu'
 const defaultBaseURL = import.meta.env.DEV ? '/api' : 'https://botsdesk.com/ag'
+const pushBaseURL = import.meta.env.DEV ? '/push' : 'https://botsdesk.com/ph'
 
 const authConfig: CreateAxiosDefaults = {
   baseURL: authBaseURL,
@@ -18,7 +19,16 @@ const defaultConfig: CreateAxiosDefaults = {
   }
 }
 
+const pushConfig: CreateAxiosDefaults = {
+  baseURL: pushBaseURL,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('business_access_token')}`
+  }
+}
+
 const AuthApiInstance = axios.create(authConfig)
 const DefaultApiInstance = axios.create(defaultConfig)
+const PushApiInstance = axios.create(pushConfig)
 
-export { AuthApiInstance, DefaultApiInstance }
+export { AuthApiInstance, DefaultApiInstance, PushApiInstance }
