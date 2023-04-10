@@ -152,6 +152,11 @@ export interface CreateTagResponce {
   object_id: number
 }
 
+export interface ArticleTagListParams {
+  path: BusinessId & ArticleId
+  query?: Pagination & UserId
+}
+
 export type ListArticlesResponse = ListType<ShortArticleOutput>
 export type ListBusinessesResponse = ListType<BusinessInfoOutput>
 export type ListChannelsResponse = ListType<ListChannelsItem>

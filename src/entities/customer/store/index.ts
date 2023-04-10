@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { push } from '@/entities/push/api'
 
 import { customer, type ListArticlesResponse } from '../api'
-import type { ListTagsResponce } from '../api/interface'
+import type { ListTagsResponce, TagItem } from '../api/interface'
 
 export const useArticleStore = defineStore('article', () => {
   const answer = ref<string | null>(null)
@@ -15,7 +15,8 @@ export const useArticleStore = defineStore('article', () => {
   const created = ref<string | null>(null)
   const updated = ref<string | null>(null)
 
-  const articleTags = ref<Set<string>>(new Set())
+  const articleTags = ref<Set<TagItem>>(new Set())
+  const selectedTags = ref<Set<string>>(new Set())
   const askArticles = ref<
     {
       ask_article_id: number
@@ -32,11 +33,34 @@ export const useArticleStore = defineStore('article', () => {
   const isLoading = ref<boolean>(false)
   const error = ref<Error | null>(null)
 
+  async function onTagListArticle(business_id: string, id: string) {
+    try {
+      const res = await customer.artileTagList({ path: { business_id, id } })
+      articleTags.value = new Set(res.data.items)
+      selectedTags.value = new Set(res.data.items.map((value) => String(value.tag_id)))
+    } catch (err: any) {
+      const message = err.response?.data?.detail
+      if (err instanceof Error) {
+        if (message) {
+          error.value = { message, name: 'ERROR_AXIOS' }
+        } else {
+          error.value = err
+        }
+      }
+    }
+  }
+
+  /**
+   * Return array elements `targetArray` which do not match the `filterArray`
+   */
+  function tagSearch<T>(targetArray: T[], filterArray: T[]): T[] {
+    return targetArray.filter((value1) => !filterArray.filter((value2) => value1 === value2).length)
+  }
+
   async function onArticle(business_id: string, id: string) {
     try {
       isLoading.value = true
       const res = await customer.article({ path: { business_id, id } })
-      isLoading.value = false
 
       answer.value = res.data.answer
       answer_md.value = res.data.answer_md
@@ -48,6 +72,10 @@ export const useArticleStore = defineStore('article', () => {
 
       newAnswer.value = answer_md.value
       newQuestion.value = question_md.value
+
+      await onTagListArticle(business_id, id)
+
+      isLoading.value = false
     } catch (err: any) {
       const message = err.response?.data?.detail
       if (err instanceof Error) {
@@ -62,7 +90,7 @@ export const useArticleStore = defineStore('article', () => {
     }
   }
 
-  async function onCreateArticle(business_id: string, tags?: string[]) {
+  async function onCreateArticle(business_id: string) {
     try {
       if (!newQuestion.value) {
         throw new Error('new question is empty')
@@ -73,6 +101,8 @@ export const useArticleStore = defineStore('article', () => {
 
       const question_md = newQuestion.value
       const answer_md = newAnswer.value
+
+      const tags = Array.from(selectedTags.value)
       const res = await customer.createArticle(
         {
           path: {
@@ -84,21 +114,19 @@ export const useArticleStore = defineStore('article', () => {
           answer_md
         }
       )
-      if (tags) {
-        tags.forEach(async (tag_id) => {
-          try {
-            await customer.assignTag({
-              path: {
-                business_id,
-                id: String(res.data.object_id),
-                tag_id
-              }
-            })
-          } catch (error) {
-            console.log('fix add tag')
-          }
-        })
-      }
+      tags.forEach(async (tag_id) => {
+        try {
+          await customer.assignTag({
+            path: {
+              business_id,
+              id: String(res.data.object_id),
+              tag_id
+            }
+          })
+        } catch (error) {
+          console.log('fix add tag')
+        }
+      })
     } catch (err: any) {
       const message = err.response?.data?.detail
       if (err instanceof Error) {
@@ -113,18 +141,17 @@ export const useArticleStore = defineStore('article', () => {
     }
   }
 
-  async function onEditArticle(
-    business_id: string,
-    id: string,
-    newTags?: string[],
-    removeTags?: string[]
-  ) {
+  async function onEditArticle(business_id: string, id: string) {
     try {
+      const currentTags = Array.from(articleTags.value).map((tag) => String(tag.tag_id))
+      const newTags = Array.from(selectedTags.value)
+      const removeTags = tagSearch(currentTags, newTags)
+      const addTags = tagSearch(newTags, currentTags)
       if (
         newQuestion.value === question.value &&
         newAnswer.value === answer.value &&
-        newTags === undefined &&
-        removeTags === undefined
+        !removeTags.length &&
+        !addTags.length
       ) {
         throw new Error(`Old value is equal to new value`)
       }
@@ -145,37 +172,33 @@ export const useArticleStore = defineStore('article', () => {
         }
       )
 
-      if (removeTags) {
-        removeTags.forEach(async (tag_id) => {
-          try {
-            customer.revokeTag({
-              path: {
-                business_id,
-                id,
-                tag_id
-              }
-            })
-          } catch (error) {
-            console.log('fix add tag')
-          }
-        })
-      }
+      removeTags.forEach(async (tag_id) => {
+        try {
+          await customer.revokeTag({
+            path: {
+              business_id,
+              id,
+              tag_id
+            }
+          })
+        } catch (err: any) {
+          console.log('fix add tag')
+        }
+      })
 
-      if (newTags) {
-        newTags.forEach(async (tag_id) => {
-          try {
-            await customer.assignTag({
-              path: {
-                business_id,
-                id,
-                tag_id
-              }
-            })
-          } catch (error) {
-            console.log('fix add tag')
-          }
-        })
-      }
+      addTags.forEach(async (tag_id) => {
+        try {
+          await customer.assignTag({
+            path: {
+              business_id,
+              id,
+              tag_id
+            }
+          })
+        } catch (error) {
+          console.log('fix add tag')
+        }
+      })
 
       if (answer.value === '') {
         const res = await customer.getBusinessToken({
@@ -259,6 +282,7 @@ export const useArticleStore = defineStore('article', () => {
   function onNewValuesReset() {
     newAnswer.value = answer.value ?? ''
     newQuestion.value = question.value ?? ''
+    selectedTags.value = new Set(Array.from(articleTags.value).map((value) => String(value.tag_id)))
     error.value = null
   }
 
@@ -280,6 +304,7 @@ export const useArticleStore = defineStore('article', () => {
     newAnswer.value = ''
     newQuestion.value = ''
     articleTags.value = new Set()
+    selectedTags.value = new Set()
   }
 
   return {
@@ -296,6 +321,7 @@ export const useArticleStore = defineStore('article', () => {
     askArticles,
     error,
     articleTags,
+    selectedTags,
     onArticle,
     onCreateArticle,
     onEditArticle,
