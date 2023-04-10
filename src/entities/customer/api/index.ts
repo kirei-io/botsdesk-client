@@ -5,6 +5,7 @@ import { DefaultApiInstance } from '@/shared/api'
 import type {
   ArticleInput,
   ArticleParams,
+  ArticleTagListParams,
   AskArticlesParams,
   CreateArticleParams,
   CreateResponse,
@@ -48,14 +49,17 @@ export class CustomerApi {
 
     ask: (business_id: string, id: string) => `/business/${business_id}/article/${id}/ask_article`,
 
-    business_token: (business_id: string) => `/business/${business_id}/token`,
+    business_token: (business_id: string) => `/business/${business_id}/token/`,
 
     tag: (business_id: string) => `/business/${business_id}/tag/`,
 
     tagArticle: (business_id: string, id: string, tag_id: string) =>
       `/business/${business_id}/article/${id}/tag/${tag_id}`,
 
-    removeTag: (business_id: string, tag_id: string) => `/business/${business_id}/tag/${tag_id}`
+    removeTag: (business_id: string, tag_id: string) => `/business/${business_id}/tag/${tag_id}`,
+
+    tagListArtice: (business_id: string, id: string) =>
+      `/business/${business_id}/article/${id}/tag/`
   } as const
 
   constructor(private readonly request: AxiosInstance) {
@@ -199,6 +203,13 @@ export class CustomerApi {
     const config = this.queryConfig(params.query)
 
     return this.request.delete(url, config)
+  }
+
+  public artileTagList(params: ArticleTagListParams): Promise<AxiosResponse<ListTagsResponce>> {
+    const url = this.path.tagListArtice(params.path.business_id, params.path.id)
+    const config = this.queryConfig(params.query)
+
+    return this.request.get(url, config)
   }
 }
 

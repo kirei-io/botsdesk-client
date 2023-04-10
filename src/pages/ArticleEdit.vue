@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useArticleStore, useTagStore } from '@/entities/customer'
+import { useArticleStore } from '@/entities/customer'
 import { ROUTE_NAME } from '@/shared/config'
 import { ButtonRaised } from '@/shared/ui'
 import { ArticleForm } from '@/widgets/form-article'
@@ -14,22 +14,11 @@ const formName = 'form-article-edit'
 const route = useRoute()
 const router = useRouter()
 const store = useArticleStore()
-const tag = useTagStore()
 const business_id = ref<string>(String(route.params.business_id))
 const id = ref<string>(String(route.params.id))
 
 const submit = () => {
-  let newTags: string[] | undefined = undefined,
-    oldTags: string[] | undefined = undefined
-  if (tag.selectedTag.size) {
-    newTags = Array.from(tag.selectedTag)
-
-  }
-
-  if (tag.listTags?.items) {
-    oldTags = tag.listTags.items.map(({ tag_id }) => String(tag_id))
-  }
-  store.onEditArticle(business_id.value, id.value, newTags, oldTags)
+  store.onEditArticle(business_id.value, id.value)
   if (!store.error) {
     router.push({
       name: ROUTE_NAME.ARTICLE_VIEW,
@@ -49,7 +38,6 @@ onBeforeUnmount(() => {
 
 const resetValues = () => {
   store.onNewValuesReset()
-  tag.selectedTag = store.articleTags
 }
 </script>
 

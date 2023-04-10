@@ -94,22 +94,28 @@ const routes = computed(() => {
       :to="{ name: ROUTE_NAME.HOME }"
       class="!px-2 !py-1 !text-ctp-rosewater hover:bg-ctp-mantle hover:text-ctp-rosewater"
     >
-      <FontAwesomeIcon :icon="['fas', 'house']" class="text-xs" />
+      <FontAwesomeIcon
+        :icon="['fas', 'house']"
+        class="text-xs"
+      />
     </RouteButtonFlat>
     <FontAwesomeIcon
       :icon="['fas', 'slash']"
       rotation="90"
       class="mx-1 text-xs text-ctp-surface2"
     />
-    <span v-for="(link, index) of routes" :key="index">
+    <span
+      v-for="(link, index) of routes"
+      :key="index"
+    >
       <RouteButtonFlat
         :to="{
           name: link.name
         }"
-        :class="{
-          'pointer-events-none': route.name === link.name
-        }"
-        class="!p-1 font-medium !text-ctp-rosewater hover:bg-ctp-mantle hover:text-ctp-rosewater"
+        :class="
+          route.name === link.name ? 'pointer-events-none !text-ctp-overlay2' : '!text-ctp-rosewater'
+        "
+        class="!p-1 font-medium hover:bg-ctp-mantle hover:text-ctp-rosewater"
       >
         {{ link.title }}
       </RouteButtonFlat>
@@ -123,4 +129,5 @@ const routes = computed(() => {
   </nav>
 </template>
 
-<style></style>
+<style>
+</style>

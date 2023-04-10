@@ -16,6 +16,7 @@ const props = defineProps<{ formName: string }>()
 const store = useArticleStore()
 const tag = useTagStore()
 
+
 const keydown = () => {
   if (store.error) {
     store.onErrorReset()
@@ -87,18 +88,18 @@ const md = computed(() => serv.turndown(editor.value?.getHTML() ?? ''))
 
 const selectTag = (tag_id?: string) => {
   if (tag_id) {
-    if (tag.selectedTag.has(tag_id)) {
-      tag.selectedTag.delete(tag_id)
+    if (store.selectedTags.has(tag_id)) {
+      store.selectedTags.delete(tag_id)
     } else {
-      tag.selectedTag.add(tag_id)
+      store.selectedTags.add(tag_id)
     }
   } else {
-    tag.selectedTag.clear()
+    store.selectedTags.clear()
   }
 }
 
 const isSelectedTag = (tag_id: string) => {
-  return tag.selectedTag.has(tag_id)
+  return store.selectedTags.has(tag_id)
 }
 </script>
 
@@ -109,7 +110,10 @@ const isSelectedTag = (tag_id: string) => {
         {{ store.error?.message }}
       </span>
     </div>
-    <FormLayout :id="props.formName" @keydown="keydown">
+    <FormLayout
+      :id="props.formName"
+      @keydown="keydown"
+    >
       <InputText
         v-model:value="store.newQuestion"
         name="question"
@@ -121,7 +125,10 @@ const isSelectedTag = (tag_id: string) => {
       <div>
         <div class="mb-2 px-4 text-sm font-semibold text-ctp-subtext0">Tags</div>
         <CardLayout class="mb-8">
-          <div v-if="tag.listTags && tag.listTags.total > 0" class="flex flex-wrap gap-4">
+          <div
+            v-if="tag.listTags && tag.listTags.total > 0"
+            class="flex flex-wrap gap-4"
+          >
             <ButtonFlat
               v-for="(tagItem, index) of tag.listTags?.items"
               :key="index"
@@ -134,15 +141,27 @@ const isSelectedTag = (tag_id: string) => {
               {{ tagItem.name }}
             </ButtonFlat>
           </div>
-          <div v-else class="font-semibold text-ctp-overlay1">No tags</div>
+          <div
+            v-else
+            class="font-semibold text-ctp-overlay1"
+          >No tags</div>
         </CardLayout>
       </div>
       <div v-if="editor">
         <CardLayout class="mb-4 flex gap-2 !px-4 !py-2">
-          <ButtonEditor :is-active="false" @click.prevent="() => editor?.commands.undo()">
-            <FontAwesomeIcon :icon="['fas', 'arrow-turn-right']" flip="horizontal" />
+          <ButtonEditor
+            :is-active="false"
+            @click.prevent="() => editor?.commands.undo()"
+          >
+            <FontAwesomeIcon
+              :icon="['fas', 'arrow-turn-right']"
+              flip="horizontal"
+            />
           </ButtonEditor>
-          <ButtonEditor :is-active="false" @click.prevent="() => editor?.commands.redo()">
+          <ButtonEditor
+            :is-active="false"
+            @click.prevent="() => editor?.commands.redo()"
+          >
             <FontAwesomeIcon :icon="['fas', 'arrow-turn-right']" />
           </ButtonEditor>
           <ButtonEditor
@@ -178,13 +197,13 @@ const isSelectedTag = (tag_id: string) => {
             <FontAwesomeIcon :icon="['fas', '2']" />
           </ButtonEditor>
           <ButtonEditor
-            :is-active="editor.isActive('bulletlist')"
+            :is-active="editor.isActive('bulletList')"
             @click.prevent="() => editor?.chain().focus().toggleBulletList().run()"
           >
             <FontAwesomeIcon :icon="['fas', 'list-ul']" />
           </ButtonEditor>
           <ButtonEditor
-            :is-active="editor.isActive('listItem')"
+            :is-active="editor.isActive('orderedList')"
             @click.prevent="() => editor?.chain().focus().toggleOrderedList().run()"
           >
             <FontAwesomeIcon :icon="['fas', 'list-ol']" />
